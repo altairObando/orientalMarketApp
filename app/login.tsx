@@ -1,16 +1,22 @@
-import { StyleSheet } from 'react-native';
-import { Layout, Text, Input, Button, Icon, IconElement } from '@ui-kitten/components';
+import { Alert, StyleSheet } from 'react-native';
+import { Layout, Text, Input, Button } from '@ui-kitten/components';
 import { useState } from 'react';
 import { useUserData } from '@/data/UserStore';
 import { router } from 'expo-router';
+import { RequestLogin } from '@/scripts/requestLogin';
 
 export default function Login() {
   const [ userName, setUserName ] = useState<string>();
   const [ password, setPassword ] = useState<string>();
   const setUserData = useUserData(state => state.setUserData);
-  const onLoginClick = ()=> {
-    setUserData({token: new Date().getTime().toString()});
-    router.replace('/')
+  const onLoginClick = async ()=> {
+    const loginData = await RequestLogin({ username: (userName ||''), password: (password || '') });
+    if(!loginData.ok){
+      Alert.alert(loginData.detail || 'Login error');
+      return;
+    }
+    setUserData({ token: loginData.access, refreshToken: loginData.refresh, username: userName });
+    router.replace('/');
   }
   return <Layout style={styles.container}>
     <Layout
@@ -18,7 +24,7 @@ export default function Login() {
       level='4' >
       <Layout style={ styles.layout }>
         <Text>New Login</Text>        
-        <Input placeholder='Username' value={userName} onChangeText={newValue => setUserName(newValue)} />
+        <Input autoCapitalize='none' placeholder='Username' value={userName} onChangeText={newValue => setUserName(newValue)} />
         <Input placeholder='Password' value={password} onChangeText={newValue => setPassword(newValue)} secureTextEntry />
         <Button onPress={onLoginClick}>Login</Button>
       </Layout>
