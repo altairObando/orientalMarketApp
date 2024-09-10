@@ -1,19 +1,51 @@
+import { StoreList } from '@/components/Store/StoreList';
+import { Store } from '@/interfaces/Store';
 import { baseFetch } from '@/scripts/api';
-import { useEffect } from 'react';
-import { Text, View } from 'react-native';
+import { AxiosResponse } from 'axios';
+import { router, useNavigation } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { View } from 'react-native';
+import { Button, Card, Icon, Text } from 'react-native-paper';
+
 export default function Index() {
+  const navigation = useNavigation();
+  const [ stores, setStores ] = useState<Store[] | null>(null);
   useEffect(()=>{
-    baseFetch({ url: 'store/'}).then(response => console.log('userstores', response.data));
-  },[])
+    navigation.setOptions({
+      headerRight: ()=> <Button mode='text' onPress={ onNewStoreClick }>
+        <Icon source='plus' size={20} />
+      </Button>
+    })
+  },[navigation])
+  useEffect(()=>{
+    baseFetch({ url: 'store/'}).then(response => {
+      let result : AxiosResponse<Store[] | null> = response;
+      if(result.status == 200 )
+        setStores(result.data);
+    });
+  },[]);
+  const onNewStoreClick=()=>{
+    router.push('/newStore')
+  }
   return (
     <View
       style={{
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this kkk.</Text>
+        padding: 25,
+        justifyContent: 'center'}}>
+        <View style={{ alignSelf: 'center'}}>
+          <Icon size={50} source={'store-outline'} color='gray' />
+        </View>
+        <Card mode='elevated' elevation={4} style={{ display: stores && stores.length > 0 ? 'flex': 'none' }}>
+          <Card.Title title='Select your project' />
+          <Card.Content>
+            <StoreList storeItems={ stores }/>
+          </Card.Content>
+        </Card>
+        <Text style={{ 
+          alignSelf: 'center',
+          display: !stores ? 'flex': 'none'
+        }}>Create a new Store </Text>
     </View>
   );
 }

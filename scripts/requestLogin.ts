@@ -14,14 +14,14 @@ export interface ILoginResponse{
 }
 export const RequestLogin = async (request : ILogin ) : Promise<ILoginResponse> => {
     try {
-        const loginUri = `token/`;        
+        const loginUri = `token/`;
         const response: AxiosResponse<ILoginResponse> = await basePost({ url: loginUri, data: request });
         const userData: ILoginResponse = {...response.data, ok: !response.data.detail }
         api.defaults.headers.common['Authorization'] = `Bearer ${userData.access}`;//;
         return userData
     } catch (error) {
         let errorMessage = '';
-        if(axios.isAxiosError(error)){
+        if(error && axios.isAxiosError(error)){
             let errorData: ILoginResponse = error.response?.data;
             errorMessage = (errorData.detail || '' );
         }else 
