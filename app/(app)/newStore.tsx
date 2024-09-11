@@ -1,15 +1,14 @@
 import { ModalMapPicker } from '@/components/Maps/ModalMapPicker';
+import { extractStoreError, StoreError } from '@/interfaces/Errors/StoreError';
 import { Coordinate } from '@/interfaces/Map/MapLocation';
 import { Store } from '@/interfaces/Store';
 import { createNewStore } from '@/scripts/Store';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { AxiosError } from 'axios';
 import * as Location from 'expo-location';
-import { useNavigation } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Divider, HelperText, Icon, TextInput } from 'react-native-paper';
-import { extractStoreError, StoreError } from '@/interfaces/Errors/StoreError'
 export default function newStoreForm() {
     // const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState<boolean>(false);

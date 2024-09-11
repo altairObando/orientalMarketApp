@@ -10,5 +10,8 @@ export default function AppLayout(){
         title: 'New Store',
         headerShown: true,
       }}/>
+    <Stack.Screen name='(home)' options={{
+      title: 'Store Options'
+    }}/>
   </Stack>
 }
