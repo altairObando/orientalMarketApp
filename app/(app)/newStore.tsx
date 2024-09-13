@@ -6,6 +6,7 @@ import { createNewStore } from '@/scripts/Store';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { AxiosError } from 'axios';
 import * as Location from 'expo-location';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Divider, HelperText, Icon, TextInput } from 'react-native-paper';
@@ -15,14 +16,8 @@ export default function newStoreForm() {
     const [userLocation, setUserLocation] = useState<Coordinate | null>();
     const [userData, setUserData] = useState<Store>({} as Store);
     const [formErrors, setFormErrors ] = useState<StoreError>({} as StoreError );
-    // useEffect(() => {
-    //     navigation.setOptions({
-    //         headerRight: () => <Button mode='text' onPress={ onSaveStorePress }> Save </Button>
-    //     })
-    // }, [navigation]);
     const onSaveStorePress = ()=> {
-        console.log( userData )
-        createNewStore(userData).then(newStore => console.log(newStore))
+        createNewStore(userData).then(newStore => router.replace({ pathname: '/tab1', params: { id: newStore.id } }))
         .catch( error => {
             if( error instanceof AxiosError ){
                 const errors: StoreError = extractStoreError(error.response?.data ?? {} );

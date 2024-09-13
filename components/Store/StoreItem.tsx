@@ -17,7 +17,7 @@ export const StoreItem: React.FC<StoreItemProps> = ({ item })=>{
         <List.Item
           title={ item.storeName }
           description={ item.address1 }
-          right={ props => <List.Icon icon='folder' { ...props }/>}/>
+          right={ props => <List.Icon icon='store' { ...props }/>}/>
       </Link>
     </TouchableOpacity>
 }

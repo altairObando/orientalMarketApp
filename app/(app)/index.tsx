@@ -4,8 +4,8 @@ import { baseFetch } from '@/scripts/api';
 import { AxiosResponse } from 'axios';
 import { router, useNavigation } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { View } from 'react-native';
-import { Button, Card, Icon, Text } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { Button, Card, Icon, IconButton, Text } from 'react-native-paper';
 
 export default function Index() {
   const navigation = useNavigation();
@@ -36,27 +36,37 @@ export default function Index() {
   }
   return (
     <View
-      style={{
-        flex: 1,
-        padding: 25,
-        justifyContent: 'center',
-      }}>
-        <View style={{ alignSelf: 'center'}}>
+      style={ styles.container }>
+        <View style={ styles.logo }>
           <Icon size={50} source={'store-outline'} color='gray' />
         </View>
-        <Card mode='elevated' elevation={4} style={{ display: stores && stores.length > 0 ? 'flex': 'none' }}>
-          <Card.Title title='Select your store' />
-          <Card.Content>
-            <StoreList 
-              storeItems={ stores }
-              refreshing= { loading }
-              onRefreshRequest={ GetStores }/>
-          </Card.Content>
-        </Card>
-        <Text style={{ 
-          alignSelf: 'center',
-          display: !stores ? 'flex': 'none'
-        }}>Create a new Store </Text>
+        <View style={{ flex: 2 }}>
+          <Card mode='elevated' elevation={4} style={{ display: stores && stores.length > 0 ? 'flex': 'none' }}>
+            <Card.Title title='Select your store' right={props => <IconButton {...props} icon='reload' onPress={ GetStores }/>} />
+            <Card.Content>
+              <StoreList 
+                storeItems={ stores }
+                refreshing= { loading }
+                onRefreshRequest={ GetStores }/>
+            </Card.Content>
+          </Card>
+            <Text style={{ 
+              alignSelf: 'center',
+              display: !stores || stores.length === 0 ? 'flex': 'none'
+          }}>Create a new Store </Text>
+        </View>
     </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 25,
+    justifyContent: 'center',
+  },
+  logo: {
+    alignSelf: 'center',
+    flex: 1,
+    paddingTop: 25,
+  },
+})
