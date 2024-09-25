@@ -4,7 +4,7 @@ import { Modal, View, StyleSheet } from 'react-native';
 import { MapPicker } from './MapPicker';
 import { Button } from 'react-native-paper';
 
-export const ModalMapPicker: React.FC<ModalMapPickerProps>=({ visible, onClose, onSelectLocation })=>{
+export const ModalMapPicker: React.FC<ModalMapPickerProps>=({ visible, onClose, onSelectLocation, initialCoordinate })=>{
     return <Modal visible={ visible } transparent={ false }>
         <View style={ styles.container }>
             <MapPicker onSelectLocation={ onSelectLocation } />

@@ -4,8 +4,8 @@ import { baseFetch } from '@/scripts/api';
 import { AxiosResponse } from 'axios';
 import { router, useNavigation } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Button, Card, Icon, IconButton, Text } from 'react-native-paper';
+import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { Button, Card, Icon, IconButton } from 'react-native-paper';
 
 export default function Index() {
   const navigation = useNavigation();
@@ -35,27 +35,30 @@ export default function Index() {
     router.push('/newStore')
   }
   return (
-    <View
-      style={ styles.container }>
-        <View style={ styles.logo }>
-          <Icon size={50} source={'store-outline'} color='gray' />
-        </View>
-        <View style={{ flex: 2 }}>
-          <Card mode='elevated' elevation={4} style={{ display: stores && stores.length > 0 ? 'flex': 'none' }}>
-            <Card.Title title='Select your store' right={props => <IconButton {...props} icon='reload' onPress={ GetStores }/>} />
-            <Card.Content>
-              <StoreList 
-                storeItems={ stores }
-                refreshing= { loading }
-                onRefreshRequest={ GetStores }/>
-            </Card.Content>
-          </Card>
-            <Text style={{ 
-              alignSelf: 'center',
-              display: !stores || stores.length === 0 ? 'flex': 'none'
-          }}>Create a new Store </Text>
-        </View>
-    </View>
+    <ScrollView
+      style={{ flex: 1 }}
+      refreshControl={<RefreshControl refreshing={ loading } onRefresh={ GetStores } />}>
+      <View
+        style={ styles.container }>
+          <View style={ styles.logo }>
+            <Icon size={50} source={'store-outline'} color='gray' />
+          </View>
+          <View style={{ flex: 2 }}>
+            <Card mode='elevated' elevation={4} style={{ display: stores && stores.length > 0 ? 'flex': 'none' }}>
+              <Card.Title title='Select your store' right={props => <IconButton {...props} icon='reload' onPress={ GetStores }/>} />
+              <Card.Content>
+                <StoreList 
+                  storeItems={ stores }
+                  refreshing= { loading }
+                  onRefreshRequest={ GetStores }/>
+              </Card.Content>
+            </Card>
+              <View style={{display: !stores || stores.length === 0 ? 'flex': 'none'}}>
+                <Button onPress={ onNewStoreClick} mode='text'>Create a new Store </Button>
+              </View>
+          </View>
+      </View>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
@@ -63,6 +66,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 25,
     justifyContent: 'center',
+    rowGap: 25,
   },
   logo: {
     alignSelf: 'center',

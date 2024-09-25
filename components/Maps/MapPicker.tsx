@@ -8,13 +8,15 @@ import { Text } from 'react-native-paper';
 
 interface MapPickerProps {
   onSelectLocation: (location: Coordinate) => void;
+  initialCoordinate?: Coordinate | null
 }
 
-export const MapPicker: React.FC<MapPickerProps>=({ onSelectLocation })=>{
+export const MapPicker: React.FC<MapPickerProps>=({ onSelectLocation, initialCoordinate })=>{
     const [ locationPermision, setLocationPermission ] = useState<Location.PermissionStatus | null>();
     const [ userLocation, setUserLocation ] = useState<MapLocation>();
     const [ marker, setMarker] = useState<Coordinate>({ latitude: 0, longitude: 0 });
     const [ errorMsg, setErrorMsg ] = useState<String>();
+    
     useEffect(() => {
         (async () => {
           let { status } = await Location.requestForegroundPermissionsAsync();

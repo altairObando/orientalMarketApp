@@ -14,4 +14,5 @@ export interface ModalMapPickerProps {
     visible: boolean;
     onClose: () => void;
     onSelectLocation: (location: Coordinate) => void;
+    initialCoordinate: Coordinate | null
 }
