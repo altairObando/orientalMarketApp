@@ -4,14 +4,15 @@ import * as Location from 'expo-location';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapView, { MapPressEvent, Marker, PROVIDER_DEFAULT } from 'react-native-maps';
-import { Text } from 'react-native-paper';
+import { Text, Button } from 'react-native-paper';
 
 interface MapPickerProps {
   onSelectLocation: (location: Coordinate) => void;
-  initialCoordinate?: Coordinate | null
+  initialCoordinate?: Coordinate | null,
+  onClose: () => void;
 }
 
-export const MapPicker: React.FC<MapPickerProps>=({ onSelectLocation, initialCoordinate })=>{
+export const MapPicker: React.FC<MapPickerProps>=({ onSelectLocation, initialCoordinate, onClose })=>{
     const [ locationPermision, setLocationPermission ] = useState<Location.PermissionStatus | null>();
     const [ userLocation, setUserLocation ] = useState<MapLocation>();
     const [ marker, setMarker] = useState<Coordinate>({ latitude: 0, longitude: 0 });
@@ -29,6 +30,7 @@ export const MapPicker: React.FC<MapPickerProps>=({ onSelectLocation, initialCoo
           const{ coords } = location;
           const mapLocation: MapLocation = calculateDelta( coords.latitude, coords.longitude, 50);
           setUserLocation(mapLocation);
+          onSelectLocation(mapLocation);
           setMarker({ latitude: mapLocation.latitude, longitude: mapLocation.longitude })
         })();
       }, []);
@@ -39,6 +41,11 @@ export const MapPicker: React.FC<MapPickerProps>=({ onSelectLocation, initialCoo
           onSelectLocation(event.nativeEvent.coordinate);
       }
     };
+    useEffect(()=>{
+      if(typeof initialCoordinate === 'undefined' || initialCoordinate == null || (initialCoordinate.latitude == 0)) return;
+      const initial = calculateDelta(initialCoordinate.latitude, initialCoordinate.longitude, 50);
+      setUserLocation(initial);
+    },[initialCoordinate])
     if(locationPermision != Location.PermissionStatus.GRANTED)
         return <View style={ styles.container }>
             <Text> { errorMsg || 'Without location permission' } </Text>
@@ -51,16 +58,21 @@ export const MapPicker: React.FC<MapPickerProps>=({ onSelectLocation, initialCoo
             showsUserLocation={true}
             showsMyLocationButton={true}            
             showsTraffic
-            initialRegion={ userLocation }
-            region={{
-                latitude: userLocation?.latitude ?? 0,
-                longitude: userLocation?.longitude ?? 0,
-                latitudeDelta: userLocation?.latitudeDelta ?? 0,
-                longitudeDelta: userLocation?.longitudeDelta ?? 0,
-            }}>
-            <Marker coordinate={ marker } draggable />
+            initialRegion={ userLocation }>
+            <Marker
+              coordinate={ marker }
+              draggable
+              onDragEnd={(e) => {
+                const { latitude, longitude } = e.nativeEvent.coordinate;
+                setMarker({ latitude, longitude });
+                if (typeof onSelectLocation === 'function') {
+                  onSelectLocation(e.nativeEvent.coordinate);
+                }
+              }} />
         </MapView>
-        
+        { userLocation && <Button style={ styles.btnUserSelection } mode='contained' onPress={ onClose}>
+                Use this location
+        </Button> }
     </View>
 }
 
@@ -73,4 +85,11 @@ const styles = StyleSheet.create({
     map: {
       ...StyleSheet.absoluteFillObject,
     },
+    btnUserSelection: {
+      flex: 1,
+      position: 'absolute',
+      zIndex: 99,
+      right: 25,
+      bottom: 50,
+  }
 });

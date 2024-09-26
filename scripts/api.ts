@@ -14,3 +14,4 @@ type BaseFetch = {
   
   export const baseFetch = ({ url }: BaseFetch) => api.get(url);
   export const basePost = ({ url, data }: BasePost) => api.post(url, data);
+  export const basePut = ({ url, data }: BasePost) => api.put(url, data);
