@@ -19,7 +19,7 @@ const CurrencyPicker:React.FC<CurrencyPickerProps>=(props)=>{
         baseFetch({ url: '/currency/'}).then(response => {
             let result: AxiosResponse<Currency[] | undefined> = response;
             if(result.status == 200){
-                setOptions( (result.data??[]).map( c => ({ value: c.id.toString(), label: c.name } as Option )))
+                setOptions( (result.data??[]).map( c => ({ value: c.id.toString(), label: `${c.symbol } ${c.name}`.trim() } as Option )))
             }
         })
     },[]);
@@ -30,7 +30,11 @@ const CurrencyPicker:React.FC<CurrencyPickerProps>=(props)=>{
     label={props.label?? 'Currency'}
     placeholder={props?.label??'Select your currency'}
     value={ selectedValue }
-    onSelect={ setValue }
+    onSelect={ value => {
+        setValue(value);
+        if(typeof props.onChange === 'function')
+            props.onChange(value??'');
+    }}
     mode={ props.mode ?? 'outlined'}
     options={ options ?? [] } />
 }
