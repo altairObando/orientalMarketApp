@@ -5,23 +5,23 @@ import { Card, Text, IconButton } from 'react-native-paper';
 interface ProductItemProps {
     imageUrl : string;
     productTitle: string;
-    productPrice: string;
-    productOther: string
+    productLeft: string;
+    productRigth: string
 }
 
 export const ProductItem: React.FC<ProductItemProps> = (props) => (
-    <Card style={{ flex: 1 }}>
+    <Card>
         <TouchableOpacity style={styles.itemContainer}>
             <Image
                 source={{ uri: props.imageUrl }}
                 style={styles.imageStyle} />
             <View style={styles.textContainer}>
                 <View style={ styles.titleContainer }>
-                    <Text style={{ flex: 1, width: 1 }}>{ props.productTitle }</Text>
+                    <Text>{ props.productTitle }</Text>
                 </View>
                 <View style={ styles.pricingText }>
-                    <Text>{ props.productPrice }</Text>
-                    <Text>{ props.productOther }</Text>
+                    <Text>{ props.productLeft }</Text>
+                    <Text>{ props.productRigth }</Text>
                 </View>
             </View>
             <Pressable>
@@ -33,17 +33,22 @@ export const ProductItem: React.FC<ProductItemProps> = (props) => (
 
 const styles = StyleSheet.create({
     itemContainer: {
-        flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'
+        flexDirection: 'row', justifyContent: 'space-between', alignItems:'center'
     },
-    imageStyle: { width: 100, height: 100, alignSelf: 'flex-start', resizeMode: 'stretch' },
-    textContainer: { padding: 10, flex: 1, flexDirection: 'column', justifyContent: 'space-between', gap: 10 },
-    titleContainer: { flex: 1, flexGrow: 1, flexDirection: 'row' },
+    imageStyle: { 
+        width: 100,
+        height: 100,
+        alignSelf: 'flex-start',
+        resizeMode: 'stretch',
+        margin:10,
+        borderRadius: 10
+    },
+    textContainer: { padding: 10, flex: 1, flexDirection: 'column', justifyContent:'space-between', gap: 10 },
+    titleContainer: { flex: 2, justifyContent:'center', alignContent:'center' },
     pricingText: {
         flex: 1,
-        flexDirection: 'row',
         gap: 15,
         justifyContent: 'space-around',
-        backgroundColor: 'cyan',
-        alignItems: 'center'
+        flexDirection: 'row'
     }
 })

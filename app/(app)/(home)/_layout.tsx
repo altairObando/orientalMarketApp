@@ -11,7 +11,7 @@ export default function TabRoot(){
                     tabBarIcon: ({ color }) => <FontAwesome size={20} name='home' color={color} />,
                   }}/>
             <Tabs.Screen
-                name='tab2'
+                name='Products'
                 options={{
                     title: 'Products',
                     tabBarIcon: ({ color }) => <FontAwesome size={20} name='box' color={color} />,

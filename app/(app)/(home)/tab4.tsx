@@ -36,11 +36,16 @@ export default function Tab1(){
     const GetStores =()=>{
         if(!id || Number(id) == 0) return
         setLoading(true);
-        baseFetch({ url: `store/${ id }`}).then(response => {
+        baseFetch({ url: `store/${ id }/`}).then(response => {
             let result : AxiosResponse<Store | null> = response;
             if(result.status == 200 )
             setUserData(result.data?? {} as Store);
-        }).finally( ()=> {
+        }).catch(error => {
+            if( error instanceof AxiosError){
+                console.log(error.request.headers)
+            }
+        })
+        .finally( ()=> {
             setLoading(false);
         })
     }
@@ -56,11 +61,10 @@ export default function Tab1(){
         enabled>
         <ScrollView>
             <ProgressBar indeterminate visible={ loading } />
-                <View style={ styles.logo }>
-            <Icon size={100} source={'store-outline'} color='gray' />
-        </View>
+            <View style={ styles.logo }>
+                <Icon size={100} source={'store-outline'} color='gray' />
+            </View>
             <List.AccordionGroup expandedId={groupSelect} onAccordionPress={ ( expandedId )=> {
-                console.log([expandedId, groupSelect])
                 if( expandedId !== groupSelect) setGroupSelect(expandedId)
                 else setGroupSelect('0')
             } }>
