@@ -3,7 +3,7 @@ import { TouchableOpacity, Image, View, Pressable, StyleSheet } from 'react-nati
 import { Card, Text, IconButton } from 'react-native-paper';
 
 interface ProductItemProps {
-    imageUrl : string;
+    imageUrl? : string;
     productTitle: string;
     productLeft: string;
     productRigth: string
@@ -13,7 +13,7 @@ export const ProductItem: React.FC<ProductItemProps> = (props) => (
     <Card>
         <TouchableOpacity style={styles.itemContainer}>
             <Image
-                source={{ uri: props.imageUrl }}
+                source={ props.imageUrl && props.imageUrl != null ? { uri: props.imageUrl } : require('@/assets/images/box.png')}
                 style={styles.imageStyle} />
             <View style={styles.textContainer}>
                 <View style={ styles.titleContainer }>

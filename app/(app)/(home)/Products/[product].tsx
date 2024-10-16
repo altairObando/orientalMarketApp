@@ -4,6 +4,8 @@ import  { useLocalSearchParams, useNavigation } from 'expo-router'
 import { useEffect, useState } from 'react';
 import { Product } from '@/interfaces/Product';
 import ProductForm from '@/components/Product/ProductForm';
+import { baseFetch } from '@/scripts/api';
+import { AxiosResponse } from 'axios';
 export default function ProductsForm(){
     const params = useLocalSearchParams();
     const navigation = useNavigation();
@@ -20,7 +22,12 @@ export default function ProductsForm(){
             setProduct({} as Product);
             return;
         }else {
-            /// TODO: Fetch product by id
+            baseFetch({ url: `/product/${params.id}`}).then(response => {
+              let productResponse : AxiosResponse<Product> = response;
+              if(productResponse.status==200){
+                setProduct(productResponse.data);
+              }              
+            })
         }
 
       },[ params.id ])
